@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs')
 const { validateLoginInput, validateRegisterInput } = require("./validators")
 const User = require('../models/User');
 const { JWT_SECRET_KEY } = require("../config");
+const { generateCreatedAt } = require("./DateUtils");
 
 const generateToken = (user) => {
     return jwt.sign({ id: user.id, email: user.email, username: user.username }, JWT_SECRET_KEY, { expiresIn: '1h' });
@@ -46,7 +47,7 @@ module.exports = {
         // hash password and create an auth token
         password = await bcrypt.hash(password, 12);
         const newUser = new User({
-            email, username, password, createdAt: new Date().toISOString()
+            email, username, password, createdAt: generateCreatedAt()
         })
         const result = await newUser.save()
         const token = generateToken(result);

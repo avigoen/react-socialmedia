@@ -10,6 +10,18 @@ module.exports = {
         deletePost(_, { postId }, context) {
             const user = checkAuth(context)
             return PostUtils.deletePost(postId, user)
+        },
+        createComment(_, { postId, body }, context) {
+            const user = checkAuth(context)
+            return PostUtils.createComment(postId, body, user)
+        },
+        deleteComment(_, { postId, commentId }, context) {
+            const user = checkAuth(context)
+            return PostUtils.deleteComment(postId, commentId, user)
+        },
+        likePost(_, { postId }, context) {
+            const user = checkAuth(context)
+            return PostUtils.likePost(postId, user);
         }
     },
     Query: {
