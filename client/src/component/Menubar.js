@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Menu } from 'semantic-ui-react'
 
@@ -6,7 +6,15 @@ export default function MenuBar() {
     const location = useLocation()
     const [activeItem, setActiveItem] = useState(location.pathname)
 
-    const handleItemClick = (e, { name }) => setActiveItem(`/${name === "home" ? "" : name}`)
+    const setActive = (pathname) => {
+        setActiveItem(`/${["home", "/"].includes(pathname) ? "" : pathname}`)
+    }
+
+    const handleItemClick = (e, { name }) => setActive(name)
+
+    useEffect(() => {
+        setActive(location.pathname.substring(1))
+    }, [location.pathname])
 
     return (
         <div>
