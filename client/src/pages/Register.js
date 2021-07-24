@@ -4,6 +4,8 @@ import { Form, Button } from 'semantic-ui-react'
 import { useMutation } from '@apollo/client'
 import { useHistory } from 'react-router-dom'
 
+import { useForm } from '../utils/hooks'
+
 const formFields = [
     {
         label: "Username",
@@ -39,26 +41,20 @@ const InitialValues = {
 function Register() {
     const history = useHistory()
     const [errors, setErrors] = useState({})
-    const [values, setValues] = useState(InitialValues)
+
+    const { onChange, onSubmit, values } = useForm(registerUser, InitialValues)
 
     const [addUser, { loading }] = useMutation(REGISTER_USER, {
         update(_, result) {
-            setValues(InitialValues)
-            console.log(result)
             history.push("/")
         },
         onError(err) {
             setErrors(err.graphQLErrors[0].extensions.errors)
-            setValues(InitialValues)
         },
         variables: values
     })
 
-    const onChange = ({ target: { name, value } }) => setValues({ ...values, [name]: value })
-    const onSubmit = (event) => {
-        event.preventDefault();
-        addUser()
-    }
+    function registerUser() { addUser() }
 
     return (
         <div className="form-container">
