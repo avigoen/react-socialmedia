@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Menu } from 'semantic-ui-react'
 
+import { AuthContext } from '../context/auth'
+
 export default function MenuBar() {
+    const { user, logout } = useContext(AuthContext)
     const location = useLocation()
     const [activeItem, setActiveItem] = useState(location.pathname)
 
@@ -20,34 +23,34 @@ export default function MenuBar() {
         <div>
             <Menu pointing secondary size="massive" color="teal">
                 <Menu.Item
-                    name='home'
-                    active={['/', '/home'].includes(activeItem)}
-                    onClick={handleItemClick}
+                    name={user ? user.username : 'home'}
+                    active={user ? true : ['/', '/home'].includes(activeItem)}
+                    onClick={user ? null : handleItemClick}
                     as={Link}
                     to="/"
                 />
                 <Menu.Menu position='right'>
-                    <Menu.Item
-                        name='login'
-                        active={activeItem === '/login'}
-                        onClick={handleItemClick}
-                        as={Link}
-                        to="/login"
-                    />
-                    <Menu.Item
-                        name='register'
-                        active={activeItem === '/register'}
-                        onClick={handleItemClick}
-                        as={Link}
-                        to="/register"
-                    />
-                    {/* <Menu.Item
+                    {user ? <Menu.Item
                         name='logout'
-                        active={activeItem === '/logout'}
-                        onClick={handleItemClick}
-                        as={Link}
-                        to="/logout"
-                    /> */}
+                        onClick={logout}
+                    /> : <>
+                        <Menu.Item
+                            name='login'
+                            active={activeItem === '/login'}
+                            onClick={handleItemClick}
+                            as={Link}
+                            to="/login"
+                        />
+                        <Menu.Item
+                            name='register'
+                            active={activeItem === '/register'}
+                            onClick={handleItemClick}
+                            as={Link}
+                            to="/register"
+                        />
+                    </>
+                    }
+
                 </Menu.Menu>
             </Menu>
         </div>
