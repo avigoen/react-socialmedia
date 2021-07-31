@@ -26,15 +26,13 @@ function Home() {
                     </Grid.Column>
                 )}
             </Grid.Row>
-            <Grid.Row>
-                <Transition.Group>
-                    {posts && posts.map(post => (
-                        <Grid.Column key={post.id}>
-                            <PostCard post={post} />
-                        </Grid.Column>
-                    ))}
-                </Transition.Group>
-            </Grid.Row>
+            <Transition.Group as={Grid.Row}>
+                {posts && posts.map(post => (
+                    <Grid.Column key={post.id} className="card-padding">
+                        <PostCard post={post} />
+                    </Grid.Column>
+                ))}
+            </Transition.Group>
         </Grid>
     )
 }

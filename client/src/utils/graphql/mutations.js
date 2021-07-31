@@ -56,3 +56,9 @@ mutation likePost($postId: ID!){
         likeCount
     }
 }`
+
+export const DELETE_POST_MUTATION = gql`
+mutation deletePost($postId: ID!){
+    deletePost(postId: $postId)
+}
+`;
