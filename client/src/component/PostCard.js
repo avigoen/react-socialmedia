@@ -1,13 +1,16 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import moment from 'moment'
-import { Card, Icon, Label, Image, Button } from 'semantic-ui-react'
+import { Card, Image } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
+
+import { AuthContext } from '../context/auth'
+import LikeButton from './buttons/LikeButton'
+import CommentButton from './buttons/CommentButton'
+import DeleteButton from './buttons/DeleteButton'
 
 function PostCard({ post: { body, createdAt, id, username, likeCount, commentCount, likes, comments } }) {
 
-    const likePost = (e) => { console.log("likePost") }
-    const commentOnPost = (e) => { console.log("commentOnPost") }
-
+    const { user } = useContext(AuthContext)
     return (
         <Card fluid>
             <Card.Content>
@@ -23,22 +26,11 @@ function PostCard({ post: { body, createdAt, id, username, likeCount, commentCou
                 </Card.Description>
             </Card.Content>
             <Card.Content extra>
-                <Button as='div' labelPosition='right'>
-                    <Button color='teal' basic onClick={likePost}>
-                        <Icon name='heart' />
-                    </Button>
-                    <Label as='a' basic color='teal' pointing='left'>
-                        {likeCount}
-                    </Label>
-                </Button>
-                <Button as='div' labelPosition='right'>
-                    <Button color='blue' basic onClick={commentOnPost}>
-                        <Icon name='comments' />
-                    </Button>
-                    <Label as='a' basic color='blue' pointing='left'>
-                        {commentCount}
-                    </Label>
-                </Button>
+                <LikeButton id={id} user={user} likes={likes} likeCount={likeCount} />
+                <CommentButton id={id} commentCount={commentCount} />
+                {user && user.username === username && (
+                    <DeleteButton onDelete={() => console.log("DeletePost")} />
+                )}
             </Card.Content>
         </Card>
     )

@@ -18,7 +18,7 @@ type Comment{
 }
 type Like{
     id: ID!
-    creratedAt: String!
+    createdAt: String!
     username: String!
 }
 type User{

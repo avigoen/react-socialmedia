@@ -1,11 +1,11 @@
-import { gql } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 import React, { useContext, useState } from 'react'
 import { Form, Button } from 'semantic-ui-react'
-import { useMutation } from '@apollo/client'
 import { useHistory } from 'react-router-dom'
 
 import { useForm } from '../utils/hooks'
 import { AuthContext } from '../context/auth'
+import { LOGIN_USER } from '../utils/graphql/mutations'
 
 const formFields = [
     {
@@ -74,17 +74,5 @@ function Login() {
         </div>
     )
 }
-
-const LOGIN_USER = gql`
-mutation login(
-    $username: String!,
-    $password: String!,
-    ){
-        login( username: $username, password: $password)
-        {
-            id email username createdAt token
-        }
-    }
-`
 
 export default Login

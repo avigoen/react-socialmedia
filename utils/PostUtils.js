@@ -27,7 +27,7 @@ module.exports = {
     },
     createPost: async function (body, user) {
 
-        if (args.body.trim() === '')
+        if (body.trim() === '')
             throw new Error("Post Body must not be empty")
 
         const newPost = new Post({ body, user: user.id, username: user.username, createdAt: generateCreatedAt() })
