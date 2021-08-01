@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 
 import { LIKE_POST_MUTATION } from '../../utils/graphql/mutations'
+import BasicTooltip from '../../utils/BasicTooltip'
 
 function LikeButton({ id, likes, likeCount, user }) {
     const [liked, setLiked] = useState(false)
@@ -21,13 +22,13 @@ function LikeButton({ id, likes, likeCount, user }) {
     const label = { basic: true, color: 'teal', pointing: 'left', content: likeCount }
 
     return (
-        <>
+        <BasicTooltip content={`${liked ? 'Unlike' : 'Like'} Post`}>
             {user ?
                 <Button onClick={likePost} color="teal" content="" basic={!liked} icon="heart" label={label} />
                 :
                 <Button as={Link} to="/login" basic content="" color="teal" icon="heart" label={label} />
             }
-        </>
+        </BasicTooltip>
     )
 }
 

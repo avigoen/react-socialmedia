@@ -5,6 +5,7 @@ import { useMutation } from '@apollo/client'
 import { DELETE_COMMENT_MUTATION, DELETE_POST_MUTATION } from '../../utils/graphql/mutations'
 import { FETCH_POSTS_QUERY } from '../../utils/graphql/queries'
 import { updatePostsOnPostDelete } from '../../utils/UpdateCache'
+import BasicTooltip from '../../utils/BasicTooltip'
 
 function DeleteButton({ postId, commentId, callback }) {
     const [confirmOpen, setConfirmOpen] = useState(false)
@@ -33,9 +34,11 @@ function DeleteButton({ postId, commentId, callback }) {
 
     return (
         <>
-            <Button floated="right" as="div" color="red" onClick={onDelete}>
-                <Icon name="trash" style={{ margin: 0 }} />
-            </Button>
+            <BasicTooltip content={commentId ? 'Delete Comment' : 'Delete Post'}>
+                <Button floated="right" as="div" color="red" onClick={onDelete}>
+                    <Icon name="trash" style={{ margin: 0 }} />
+                </Button>
+            </BasicTooltip>
             <Confirm
                 header={commentId ? 'Delete Comment' : 'Delete Post'}
                 content={`Do you want to delete this ${commentId ? 'comment' : 'post'}?`}

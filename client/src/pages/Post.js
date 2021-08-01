@@ -9,6 +9,7 @@ import LikeButton from '../component/buttons/LikeButton'
 import DeleteButton from '../component/buttons/DeleteButton'
 import ViewComment from '../component/comments/ViewComment'
 import CreateComment from '../component/comments/CreateComment'
+import BasicTooltip from '../utils/BasicTooltip'
 
 function Post(props) {
     const { user } = useContext(AuthContext)
@@ -58,14 +59,16 @@ function Post(props) {
                         <hr />
                         <Card.Content extra>
                             <LikeButton id={id} user={user} likes={likes} likeCount={likeCount} />
-                            <Button as="div" onClick={enableComment} labelPosition='right'>
-                                <Button color='blue' basic>
-                                    <Icon name='comments' />
+                            <BasicTooltip content="Add a comment">
+                                <Button as="div" onClick={enableComment} labelPosition='right'>
+                                    <Button color='blue' basic>
+                                        <Icon name='comments' />
+                                    </Button>
+                                    <Label as='div' basic color='blue' pointing='left'>
+                                        {commentCount}
+                                    </Label>
                                 </Button>
-                                <Label as='div' basic color='blue' pointing='left'>
-                                    {commentCount}
-                                </Label>
-                            </Button>
+                            </BasicTooltip>
                             {user && user.username === username && (
                                 <DeleteButton postId={id} callback={deletePostCallback} />
                             )}
