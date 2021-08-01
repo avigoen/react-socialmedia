@@ -60,5 +60,14 @@ mutation likePost($postId: ID!){
 export const DELETE_POST_MUTATION = gql`
 mutation deletePost($postId: ID!){
     deletePost(postId: $postId)
-}
-`;
+}`;
+
+export const DELETE_COMMENT_MUTATION = gql`
+mutation deleteComment($postId: ID!, $commentId: ID!){
+    deleteComment(postId: $postId, commentId: $commentId)
+}`;
+
+export const SUBMIT_COMMENT_MUTATION = gql`
+mutation addComment($postId: ID!, $body: String!){
+    createComment(postId: $postId, body: $body)
+}`;

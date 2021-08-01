@@ -1,23 +1,29 @@
 import React, { useState } from 'react'
 import { Button, Confirm, Icon } from 'semantic-ui-react'
 import { useMutation } from '@apollo/client'
-import { DELETE_POST_MUTATION } from '../../utils/graphql/mutations'
-import { FETCH_POSTS_QUERY } from '../../utils/graphql/queries'
 
-function DeleteButton({ postId, callback }) {
+import { DELETE_COMMENT_MUTATION, DELETE_POST_MUTATION } from '../../utils/graphql/mutations'
+import { FETCH_POSTS_QUERY } from '../../utils/graphql/queries'
+import { updatePostsOnPostDelete } from '../../utils/UpdateCache'
+
+function DeleteButton({ postId, commentId, callback }) {
     const [confirmOpen, setConfirmOpen] = useState(false)
 
-    const [deletePost] = useMutation(DELETE_POST_MUTATION, {
-        variables: { postId },
+    const mutation = commentId ? DELETE_COMMENT_MUTATION : DELETE_POST_MUTATION
+
+    const [deletePost] = useMutation(mutation, {
+        variables: { postId, commentId },
         update(proxy) {
             toggleConfirm()
-            const data = proxy.readQuery({ query: FETCH_POSTS_QUERY })
-            const updatedData = data.getPosts.filter(post => post.id !== postId)
-            proxy.writeQuery({
-                query: FETCH_POSTS_QUERY, data: {
-                    getPosts: updatedData
-                }
-            })
+            if (!commentId) {
+                const data = proxy.readQuery({ query: FETCH_POSTS_QUERY })
+                const updatedData = updatePostsOnPostDelete(postId, data.getPosts)
+                proxy.writeQuery({
+                    query: FETCH_POSTS_QUERY, data: {
+                        getPosts: updatedData
+                    }
+                })
+            }
             if (callback) callback();
         }
     })
@@ -31,8 +37,8 @@ function DeleteButton({ postId, callback }) {
                 <Icon name="trash" style={{ margin: 0 }} />
             </Button>
             <Confirm
-                header='Delete Post'
-                content='Do you want to delete this post?'
+                header={commentId ? 'Delete Comment' : 'Delete Post'}
+                content={`Do you want to delete this ${commentId ? 'comment' : 'post'}?`}
                 open={confirmOpen}
                 onCancel={toggleConfirm}
                 onConfirm={deletePost}

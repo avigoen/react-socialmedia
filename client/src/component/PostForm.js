@@ -5,6 +5,7 @@ import { useMutation } from '@apollo/client'
 import { useForm } from '../utils/hooks'
 import { FETCH_POSTS_QUERY } from '../utils/graphql/queries'
 import { CREATE_POST_MUTATION } from '../utils/graphql/mutations'
+import { updatePostsOnAddPost } from '../utils/UpdateCache'
 
 function PostForm() {
     const { onChange, onSubmit, values } = useForm(createPostCallback, {
@@ -18,7 +19,7 @@ function PostForm() {
             const data = proxy.readQuery({ query: FETCH_POSTS_QUERY })
             proxy.writeQuery({
                 query: FETCH_POSTS_QUERY, data: {
-                    getPosts: [result.data.createPost, ...data.getPosts]
+                    getPosts: updatePostsOnAddPost(data.getPosts, result.data.createPost)
                 }
             })
             values.body = "";

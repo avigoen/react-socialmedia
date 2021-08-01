@@ -7,10 +7,13 @@ import moment from 'moment'
 import { AuthContext } from '../context/auth'
 import LikeButton from '../component/buttons/LikeButton'
 import DeleteButton from '../component/buttons/DeleteButton'
+import ViewComment from '../component/comments/ViewComment'
+import CreateComment from '../component/comments/CreateComment'
 
 function Post(props) {
     const { user } = useContext(AuthContext)
     const [errorMessage, setError] = useState("")
+    const [showCommentForm, setCommentForm] = useState(false)
     const postId = props.match.params.postId
     const { data, loading } = useQuery(FETCH_POST_QUERY, {
         variables: { postId },
@@ -34,9 +37,9 @@ function Post(props) {
     }
 
     const { id, body, createdAt, username, comments, likes, likeCount, commentCount } = data.getPost
-
     const deletePostCallback = () => props.history.push("/")
-
+    const enableComment = () => setCommentForm(true)
+    const disableCommentForm = () => setCommentForm(false)
     return (
         <Grid className="no-margin">
             <Grid.Row>
@@ -55,7 +58,7 @@ function Post(props) {
                         <hr />
                         <Card.Content extra>
                             <LikeButton id={id} user={user} likes={likes} likeCount={likeCount} />
-                            <Button as="div" onClick={() => console.log("Comment on Post")} labelPosition='right'>
+                            <Button as="div" onClick={enableComment} labelPosition='right'>
                                 <Button color='blue' basic>
                                     <Icon name='comments' />
                                 </Button>
@@ -68,6 +71,10 @@ function Post(props) {
                             )}
                         </Card.Content>
                     </Card>
+                    {user && showCommentForm && <CreateComment postId={id} callback={disableCommentForm} />}
+                    {comments && comments.map(comment => (
+                        <ViewComment key={comment.id} postId={id} user={user} comment={comment} />
+                    ))}
                 </Grid.Column>
             </Grid.Row>
         </Grid>
